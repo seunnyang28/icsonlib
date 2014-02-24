@@ -50,12 +50,12 @@
 				}	
 
 				$college_address=$_POST["college_address"];
-				$email_address=$_POST["email_address"];
 				$contact_number=$_POST["contact_number"];
+				
 			}
 			
 			//update user profile
-			$this->user_model->user_update_profile($id, $username, $password, $college_address, $email_address, $contact_number);
+			$this->user_model->user_update_profile($id, $username, $password, $college_address, $contact_number);
 			$data["title"] = "Profile - ICS Library System";
 			
 			//reset user data on session

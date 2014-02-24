@@ -58,9 +58,9 @@ class User_model extends CI_Model{
 		$userQuery = $this->db->get();
 		foreach ($userQuery->result() as $row) { $userBorrowLimit = $row->borrow_limit; }
 
-		$this->db->select('reference_material_id, borrower_id, date_reserved')
+		$this->db->select('reference_materials_id, borrower_id, date_reserved')
 			->from('transactions')
-			->where('reference_material_id',$referenceId)
+			->where('reference_materials_id',$referenceId)
 			->where('borrower_id',$userId)
 			->where('date_reserved IS NOT NULL');
 		$transactionQuery = $this->db->get();
@@ -94,7 +94,7 @@ class User_model extends CI_Model{
 				$this->db->where('id', $referenceId);
 				$this->db->update('reference_materials', $refArray);
 			
-				$data = array('reference_material_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => NULL, 'date_waitlisted' => NULL, 'date_reserved' => $dateReserved, 'reservation_due_date' => $reserveDue, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
+				$data = array('reference_materials_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => NULL, 'date_waitlisted' => NULL, 'date_reserved' => $dateReserved, 'reservation_due_date' => $reserveDue, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
 				$this->db->insert('transactions', $data);
 				return true;
 		 }
@@ -123,9 +123,9 @@ class User_model extends CI_Model{
 		$waitlistStatus = $this->db->get();
 		foreach ($waitlistStatus->result() as $row2) { $limit = $row2->waitlist_limit; }
 
-		$this->db->select('reference_material_id, borrower_id, date_waitlisted')
+		$this->db->select('reference_materials_id, borrower_id, date_waitlisted')
 			->from('transactions')
-			->where('reference_material_id',$referenceId)
+			->where('reference_materials_id',$referenceId)
 			->where('borrower_id',$userId)
 			->where('date_reserved IS NOT NULL');
 		$transactionQuery = $this->db->get();
@@ -135,7 +135,7 @@ class User_model extends CI_Model{
 		else{
 			$this->db->select_max('waitlist_rank', 'maxRank')
 				->from('transactions')
-				->where('reference_material_id',$referenceId);
+				->where('reference_materials_id',$referenceId);
 			$waitlistRank = $this->db->get();
 			if($waitlistRank->num_rows() == 0){
 				$newLimit = $limit - 1;
@@ -146,7 +146,7 @@ class User_model extends CI_Model{
 				$this->db->where('id', $userId);
 				$this->db->update('users', $waitlistArray);
 
-				$data = array('reference_material_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => $rank, 'date_waitlisted' => $dateWaitlisted, 'date_reserved' => NULL, 'reservation_due_date' => NULL, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
+				$data = array('reference_materials_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => $rank, 'date_waitlisted' => $dateWaitlisted, 'date_reserved' => NULL, 'reservation_due_date' => NULL, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
 				$this->db->insert('transactions', $data);
 				return true;
 			}
@@ -160,7 +160,7 @@ class User_model extends CI_Model{
 				$this->db->where('id', $userId);
 				$this->db->update('users', $waitlistArray);
 
-				$data = array('reference_material_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => $newMaxRank, 'date_waitlisted' => $dateWaitlisted, 'date_reserved' => NULL, 'reservation_due_date' => NULL, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
+				$data = array('reference_materials_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => $newMaxRank, 'date_waitlisted' => $dateWaitlisted, 'date_reserved' => NULL, 'reservation_due_date' => NULL, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
 				$this->db->insert('transactions', $data);
 				return true;
 				}
@@ -186,8 +186,8 @@ class User_model extends CI_Model{
 	 * @param	id (int), username (string), password (string), college_address (string), email (string), contact number (int)
 	 * @return	none
 	 */
-	public function user_update_profile($id, $username, $password, $college_address, $email_address, $contact_number){
-		$updateArray = array('username' => $username, 'password' => $password, 'college_address' => $college_address, 'email_address' => $email_address, 'contact_number' => $contact_number);
+	public function user_update_profile($id, $username, $password, $college_address, $contact_number){
+		$updateArray = array('username' => $username, 'password' => $password, 'college_address' => $college_address, 'contact_number' => $contact_number);
 				$this->db->where('id', $id);
 				$this->db->update('users', $updateArray);
 	}
@@ -210,10 +210,14 @@ class User_model extends CI_Model{
 	 * @param	reference material id (int)
 	 * @return	rows from the database
 	 */
-	public function user_book_reserve($reference_material_id){
+	public function user_book_reserve($reference_materials_id){
 		$this->db->select('*')
 			->from('reference_materials')
+<<<<<<< HEAD
 			->where('id',$reference_material_id);
+=======
+			->where('id',$reference_materials_id);
+>>>>>>> 8cb5fff5d40654683d25c53a6a993cbbfebcef87
 		$userBookReserve = $this->db->get();
 		return $userBookReserve->result();
 	}
@@ -327,7 +331,7 @@ class User_model extends CI_Model{
 				$this->db->update('reference_materials', $cancelArray2);
 		
 		$this->db->where('borrower_id', $userId);
-		$this->db->where('reference_material_id', $referenceId);
+		$this->db->where('reference_materials_id', $referenceId);
 		$this->db->delete('transactions');
 		return true;
 	}
@@ -346,7 +350,7 @@ class User_model extends CI_Model{
 
 		$this->db->select('waitlist_rank')
 			->from('transactions')
-			->where('reference_material_id',$referenceId)
+			->where('reference_materials_id',$referenceId)
 			->where('borrower_id',$userId);
 		$waitlistRank = $this->db->get();
 		foreach ($waitlistRank->result() as $row) { $userWaitlistRank = $row->waitlist_rank; }
@@ -358,10 +362,10 @@ class User_model extends CI_Model{
 				$this->db->update('users', $cancelArray2);
 		
 		$this->db->query("SET @rank = '-1'"); 
-		$this->db->query("UPDATE transactions SET waitlist_rank = $userWaitlistRank + (SELECT @rank := @rank + 1) WHERE waitlist_rank > '$userWaitlistRank' AND reference_material_id='$referenceId'");			
+		$this->db->query("UPDATE transactions SET waitlist_rank = $userWaitlistRank + (SELECT @rank := @rank + 1) WHERE waitlist_rank > '$userWaitlistRank' AND reference_materials_id='$referenceId'");			
 		
 		$this->db->where('borrower_id', $userId);
-		$this->db->where('reference_material_id', $referenceId);
+		$this->db->where('reference_materials_id', $referenceId);
 		$this->db->delete('transactions');
 		return true;
 	}
