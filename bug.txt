@@ -1,0 +1,48 @@
+
+BUGS==================================================================
+not registered---------------------------
+create account - error in create account. can create account without college and degree. can create account without student number/employee number
+logo - can be clicked but does nothing (it will just confuse the user)
+reserve - database errors are showing
+advance search sort - not sorted when next is clicked
+add to cart - should not be available for unregistered users
+
+Student----------------------------------
+home - shows sign form in even already signed in
+search button - not searching anything redirects to home (it should display ALL books)
+advance search - same with search button
+advance search sort - not sorted when next is clicked
+view book - clicking back redirects to the UNSEARCHED part of the search link
+borrowed book - not showing borrowed book (or not still implemented?)
+remove all cart - redirects to home
+reserve/waitlist - i cant reserve (or still not implemented?)
+cart - theres no link that returns to search
+view reference - some words are covered by the UI
+create account - can have an account with 2 different student number BUT THE SAME email and cp number
+profile - student number, college, degree course, email contact number not showing. email cannot be change (user should be able to change this cause you dont use this email forever). user should not be able to change username (this is hard for the admin seeing different set of users everyday) change profile not working (literally corrupts users infos). text when editing: "Update Saved! Username already exist!" should be "Error! Username already exist!"
+
+Admin-----------------------------------
+profile - same prob with student. UI must be different from student profile UI (theres the borrowed/waitlisted book part in there)
+search account - search by part of string. cannot search ciel but can search ciel00
+delete - no notice when account is deleted
+create account - no notice immediatly redirects to home. using inspect element, can add invalid char in informations. overlapping of UI
+edit account - using inspect element, can add invalid char in informations. employee number, names, username should not be able to be changed. pressing save changes goes to some link saying disallowed characters
+view account - username, name etc can be clicked but does nothing (it will just confuse the user)
+sorting - can be sorted but when next is click goes back to be sorted per last name. sort by employee number shows students firsts (not sorted) instead of faculty
+
+Librarian-------------------------------
+i cant sign in a librarian
+
+
+Faculty---------------------------------
+profile - same prob with student. UI must be different from student profile UI (theres the borrowed/waitlisted book part in there)
+same probles with student
+
+
+
+------------------------suggestions----------------------------
+* buttons represented by pictures should be identified when hovered (me lalabas na name niya). without this user might get confused
+* instead of confirm pass -> change pass in profile why not enter old pass -> enter new pass -> retype new pass (this is for ANTI HACKING) (this is for profile and edit account)
+* create account - add confirm password
+* ALL links must have a link going to home
+* sa unregistered users bakit di nalang normal na select all lang yun bale different view siya na pang unreg lang tas ang nakalagay lang ay title, author at publisher
