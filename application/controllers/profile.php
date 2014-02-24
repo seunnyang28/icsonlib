@@ -84,7 +84,7 @@
 			$id = $this->session->userdata('id');
 			// if "Cancel Reservation" was clicked
 			if(isset($_POST['cancel_reserve'])){
-				$cancelStatus = $this->user_model->cancel_reserve_reference_material($referenceId, $id);
+				$cancelStatus = $this->user_model->cancel_reserve_reference_materials($referenceId, $id);
 				$data["title"] = "Profile - ICS Library System";
 
 				$username = $this->session->userdata('username'); // get username from session
@@ -98,7 +98,7 @@
 			}
 			// if "Cancel Waitlist" was clicked
 			if(isset($_POST['cancel_waitlist'])){
-				$cancelStatus = $this->user_model->cancel_waitlist_reference_material($referenceId, $id);
+				$cancelStatus = $this->user_model->cancel_waitlist_reference_materials($referenceId, $id);
 				$data["title"] = "Profile - ICS Library System";
 
 				$username = $this->session->userdata('username'); // get username from session

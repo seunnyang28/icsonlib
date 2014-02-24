@@ -49,7 +49,7 @@ class User_model extends CI_Model{
 	 * @param	referenceId (int), userId (int), userType (char)
 	 * @return	true || false || constant number (7)
 	 */
-	public function reserve_reference_material($referenceId, $userId, $userType){
+	public function reserve_reference_materials($referenceId, $userId, $userType){
 		date_default_timezone_set("Asia/Manila");	//timezone here in the Philippines
 
 		$this->db->select('borrow_limit')
@@ -58,15 +58,15 @@ class User_model extends CI_Model{
 		$userQuery = $this->db->get();
 		foreach ($userQuery->result() as $row) { $userBorrowLimit = $row->borrow_limit; }
 
-		$this->db->select('reference_material_id, borrower_id, date_reserved')
+		$this->db->select('reference_materials_id, borrower_id, date_reserved')
 			->from('transactions')
-			->where('reference_material_id',$referenceId)
+			->where('reference_materials_id',$referenceId)
 			->where('borrower_id',$userId)
 			->where('date_reserved IS NOT NULL');
 		$transactionQuery = $this->db->get();
 
 		$this->db->select('access_type, total_available, times_borrowed')
-			->from('reference_material')
+			->from('reference_materials')
 			->where('id',$referenceId);
 		$referenceQuery = $this->db->get();
 
@@ -92,9 +92,9 @@ class User_model extends CI_Model{
 
 				$refArray = array('total_available' => $newTotal, 'times_borrowed' => $newTimesBorrowed);
 				$this->db->where('id', $referenceId);
-				$this->db->update('reference_material', $refArray);
+				$this->db->update('reference_materials', $refArray);
 			
-				$data = array('reference_material_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => NULL, 'date_waitlisted' => NULL, 'date_reserved' => $dateReserved, 'reservation_due_date' => $reserveDue, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
+				$data = array('reference_materials_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => NULL, 'date_waitlisted' => NULL, 'date_reserved' => $dateReserved, 'reservation_due_date' => $reserveDue, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
 				$this->db->insert('transactions', $data);
 				return true;
 		 }
@@ -105,11 +105,11 @@ class User_model extends CI_Model{
 	 * @param	referenceId (int), userId (int), userType (char)
 	 * @return	true || false || constant number (7)
 	 */
-	public function waitlist_reference_material($referenceId, $userId, $userType){
+	public function waitlist_reference_materials($referenceId, $userId, $userType){
 		date_default_timezone_set("Asia/Manila");	//timezone in the Philippines
 
 		$this->db->select('total_available, access_type')
-			->from('reference_material')
+			->from('reference_materials')
 			->where('id',$referenceId);
 		$bookStatus = $this->db->get();
 		foreach ($bookStatus->result() as $row) {
@@ -123,9 +123,9 @@ class User_model extends CI_Model{
 		$waitlistStatus = $this->db->get();
 		foreach ($waitlistStatus->result() as $row2) { $limit = $row2->waitlist_limit; }
 
-		$this->db->select('reference_material_id, borrower_id, date_waitlisted')
+		$this->db->select('reference_materials_id, borrower_id, date_waitlisted')
 			->from('transactions')
-			->where('reference_material_id',$referenceId)
+			->where('reference_materials_id',$referenceId)
 			->where('borrower_id',$userId)
 			->where('date_reserved IS NOT NULL');
 		$transactionQuery = $this->db->get();
@@ -135,7 +135,7 @@ class User_model extends CI_Model{
 		else{
 			$this->db->select_max('waitlist_rank', 'maxRank')
 				->from('transactions')
-				->where('reference_material_id',$referenceId);
+				->where('reference_materials_id',$referenceId);
 			$waitlistRank = $this->db->get();
 			if($waitlistRank->num_rows() == 0){
 				$newLimit = $limit - 1;
@@ -146,7 +146,7 @@ class User_model extends CI_Model{
 				$this->db->where('id', $userId);
 				$this->db->update('users', $waitlistArray);
 
-				$data = array('reference_material_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => $rank, 'date_waitlisted' => $dateWaitlisted, 'date_reserved' => NULL, 'reservation_due_date' => NULL, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
+				$data = array('reference_materials_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => $rank, 'date_waitlisted' => $dateWaitlisted, 'date_reserved' => NULL, 'reservation_due_date' => NULL, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
 				$this->db->insert('transactions', $data);
 				return true;
 			}
@@ -160,7 +160,7 @@ class User_model extends CI_Model{
 				$this->db->where('id', $userId);
 				$this->db->update('users', $waitlistArray);
 
-				$data = array('reference_material_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => $newMaxRank, 'date_waitlisted' => $dateWaitlisted, 'date_reserved' => NULL, 'reservation_due_date' => NULL, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
+				$data = array('reference_materials_id' => $referenceId, 'borrower_id' => $userId, 'user_type' => $userType, 'waitlist_rank' => $newMaxRank, 'date_waitlisted' => $dateWaitlisted, 'date_reserved' => NULL, 'reservation_due_date' => NULL, 'date_borrowed' => NULL, 'borrow_due_date' => NULL, 'date_returned' => NULL);
 				$this->db->insert('transactions', $data);
 				return true;
 				}
@@ -210,10 +210,10 @@ class User_model extends CI_Model{
 	 * @param	reference material id (int)
 	 * @return	rows from the database
 	 */
-	public function user_book_reserve($reference_material_id){
+	public function user_book_reserve($reference_materials_id){
 		$this->db->select('*')
-			->from('reference_material')
-			->where('id',$reference_material_id);
+			->from('reference_materials')
+			->where('id',$reference_materials_id);
 		$userBookReserve = $this->db->get();
 		return $userBookReserve->result();
 	}
@@ -298,7 +298,7 @@ class User_model extends CI_Model{
 	 * @param	reference id (int), user id (int)
 	 * @return	true
 	 */
-	public function cancel_reserve_reference_material($referenceId, $userId){
+	public function cancel_reserve_reference_materials($referenceId, $userId){
 		$this->db->select('borrow_limit')
 			->from('users')
 			->where('id',$userId);
@@ -306,7 +306,7 @@ class User_model extends CI_Model{
 		foreach ($userQuery->result() as $row) { $userBorrowLimit = $row->borrow_limit; }
 		
 		$this->db->select('total_available, times_borrowed')
-			->from('reference_material')
+			->from('reference_materials')
 			->where('id',$referenceId);
 		$referenceQuery = $this->db->get();
 		foreach ($referenceQuery->result() as $row) { 
@@ -324,10 +324,10 @@ class User_model extends CI_Model{
 
 		$cancelArray2 = array('total_available' => $newTotal, 'times_borrowed' => $newTimesBorrowed);
 				$this->db->where('id', $referenceId);
-				$this->db->update('reference_material', $cancelArray2);
+				$this->db->update('reference_materials', $cancelArray2);
 		
 		$this->db->where('borrower_id', $userId);
-		$this->db->where('reference_material_id', $referenceId);
+		$this->db->where('reference_materials_id', $referenceId);
 		$this->db->delete('transactions');
 		return true;
 	}
@@ -337,7 +337,7 @@ class User_model extends CI_Model{
 	 * @param	reference id (int), user id (int)
 	 * @return	true
 	 */
-	public function cancel_waitlist_reference_material($referenceId, $userId){
+	public function cancel_waitlist_reference_materials($referenceId, $userId){
 		$this->db->select('waitlist_limit')
 			->from('users')
 			->where('id',$userId);
@@ -346,7 +346,7 @@ class User_model extends CI_Model{
 
 		$this->db->select('waitlist_rank')
 			->from('transactions')
-			->where('reference_material_id',$referenceId)
+			->where('reference_materials_id',$referenceId)
 			->where('borrower_id',$userId);
 		$waitlistRank = $this->db->get();
 		foreach ($waitlistRank->result() as $row) { $userWaitlistRank = $row->waitlist_rank; }
@@ -358,10 +358,10 @@ class User_model extends CI_Model{
 				$this->db->update('users', $cancelArray2);
 		
 		$this->db->query("SET @rank = '-1'"); 
-		$this->db->query("UPDATE transactions SET waitlist_rank = $userWaitlistRank + (SELECT @rank := @rank + 1) WHERE waitlist_rank > '$userWaitlistRank' AND reference_material_id='$referenceId'");			
+		$this->db->query("UPDATE transactions SET waitlist_rank = $userWaitlistRank + (SELECT @rank := @rank + 1) WHERE waitlist_rank > '$userWaitlistRank' AND reference_materials_id='$referenceId'");			
 		
 		$this->db->where('borrower_id', $userId);
-		$this->db->where('reference_material_id', $referenceId);
+		$this->db->where('reference_materials_id', $referenceId);
 		$this->db->delete('transactions');
 		return true;
 	}
@@ -410,8 +410,8 @@ class User_model extends CI_Model{
 	*	@param $bookid (string)
 	*	@return rows from db || null
 	*/
-	public function view_reference_material($bookid){
-		return $this->db->query("Select * from reference_material where id = $bookid ");
+	public function view_reference_materials($bookid){
+		return $this->db->query("Select * from reference_materials where id = $bookid ");
 	}
 
 
@@ -422,9 +422,9 @@ class User_model extends CI_Model{
 	*	@return rows from db || null
 	*/
 	
-	public function search_reference_material($keyword,$limit,$offset){
+	public function search_reference_materials($keyword,$limit,$offset){
 		if($offset == null) $offset = 0;
-		return  $this->db->query("Select * from reference_material where title like '%$keyword%' order by title asc limit $offset,$limit");
+		return  $this->db->query("Select * from reference_materials where title like '%$keyword%' order by title asc limit $offset,$limit");
 	}
 
 	/**
@@ -432,9 +432,9 @@ class User_model extends CI_Model{
 	 * @param	search input (string)
 	 * @return	rows from database
 	 */
-	public function search_reference_materials($input){
+	public function search_reference_materialss($input){
 		$this->db->select('*')
-			->from('reference_material')
+			->from('reference_materials')
 			->like('title',$input)
 			->or_like('author',$input)
 			->or_like('isbn',$input)
@@ -453,8 +453,8 @@ class User_model extends CI_Model{
 	*	@param $keyword (string)
 	*	@return rows from db || null
 	*/
-	public function search_reference_material2($keyword){
-		return  $this->db->query("Select * from reference_material where title like '%$keyword%' order by title asc");
+	public function search_reference_materials2($keyword){
+		return  $this->db->query("Select * from reference_materials where title like '%$keyword%' order by title asc");
 	}
 
 
@@ -465,12 +465,12 @@ class User_model extends CI_Model{
 	*	@param $keyword (string), $limit (int), $offset(int)
 	*	@return rows from db || null
 	*/
-	public function search_reference_material_token($keywords,$limit,$offset){
+	public function search_reference_materials_token($keywords,$limit,$offset){
 		if($offset == null) $offset = 0;
 
 		$keyword_tokens = preg_split("/[\s,]+/", $keywords);
 
-		$sql = "SELECT * FROM reference_material WHERE title LIKE'%";
+		$sql = "SELECT * FROM reference_materials WHERE title LIKE'%";
 		$sql .= implode("%' OR title LIKE '%", $keyword_tokens) . "'";
 		$sql .= "order by title asc limit $offset,$limit";
 		return  $this->db->query($sql);
@@ -482,10 +482,10 @@ class User_model extends CI_Model{
 	*	@param $keywords (string)
 	*	@return rows from db || null
 	*/
-	public function search_reference_material_token2($keywords){
+	public function search_reference_materials_token2($keywords){
 		$keyword_tokens = preg_split("/[\s,!@#$\[\]\*\(\)\^<>\?\+\_\={}]+/", $keywords);
 
-		$sql = "SELECT * FROM reference_material WHERE title LIKE'%";
+		$sql = "SELECT * FROM reference_materials WHERE title LIKE'%";
 		$sql .= implode("%' OR title LIKE '%", $keyword_tokens) . "'";
 		$sql .= "order by title asc";
 		return  $this->db->query($sql);
@@ -498,8 +498,8 @@ class User_model extends CI_Model{
 	*	@return rows from db || null
 	*/
 	/*
-	public function view_reference_material($bookid){
-		return $this->db->query("Select * from reference_material where id = $bookid ");
+	public function view_reference_materials($bookid){
+		return $this->db->query("Select * from reference_materials where id = $bookid ");
 	}*/
 
 	/**
