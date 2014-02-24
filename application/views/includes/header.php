@@ -10,7 +10,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="<?php echo base_url();?>'css/bootstrap.min.css">
+        <link rel="stylesheet" href=""<?php echo base_url();?>"css/bootstrap.min.css">
         <style>
             body {
                 padding-top: 50px;
@@ -25,7 +25,7 @@
        <link rel="stylesheet" type='text/css'href="<?php echo base_url('css/main_login.css');?>">
         <link rel="stylesheet" type='text/css'href="<?php echo base_url('css/template.css');?>">
         <link rel="stylesheet" type='text/css'href="<?php echo base_url('css/profile_view.css');?>">
-        <script src="<?base_url().'js/vendor/modernizr-2.6.2-respond-1.1.0.min.js'?>"></script>
+        <script src="<?base_url().js/vendor/modernizr-2.6.2-respond-1.1.0.min.js?>"></script>
        
     </head>
     <body>

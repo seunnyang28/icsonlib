@@ -227,7 +227,8 @@ class User_model extends CI_Model{
 	 * @param	table name (string), data (array)
 	 * @return	none
 	 */
-	public function insert_account($table_name, $data){
+	public function insert_account( $table_name, $data){
+
 		$snum = $this->input->post('student_number');
 		$enum = $this->input->post('employee_number');
 		$lname = $this->input->post('last_name');
@@ -274,7 +275,7 @@ class User_model extends CI_Model{
 	 * @param	employee number(varchar)
 	 * @return	true || false
 	 */
-	public function faculty_exists($enum){
+	public function staff_exists($enum){
 		$this->db->select('employee_number')
 			->from('users')
 			->where('employee_number',$enum);
